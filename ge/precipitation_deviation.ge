@@ -1,0 +1,65 @@
+open from_grd.ctl
+open precip_ttest_Top5years.ctl
+open precip_ttest_Bottom5years.ctl
+
+q file 1
+q file 2
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+
+*color.gs 0 55 5 -kind rainbow
+color.gs -8 8 4 -kind brown->white->blue
+
+a1=(precip(t=7)*49+precip(t=13)*55+precip(t=10)*63+precip(t=4)*53+precip(t=12)*49)/269
+a2=(precip(t=5)*44+precip(t=3)*42+precip(t=18)*24+precip(t=6)*38+precip(t=14)*43)/191
+b1=precip(t=1)*53+precip(t=2)*60+precip(t=8)*41+precip(t=9)*40+precip(t=11)*36
+b2=precip(t=15)*49+precip(t=16)*58+precip(t=17)*45+precip(t=19)*35+precip(t=20)*30
+b=(b1+b2)/447
+
+color.gs -8 8 4 -kind brown->white->blue
+
+d a1-b
+
+hatch1 ttest.2(t=1) 2 2 -thickness 4 -angle 45 -int 0.05 -type 1 -color 1
+
+xcbar 2.0 9.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 3
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 precipitation(mm/day)_deviation_Top5years
+gxprint precipitation_Top5years_deviation_ttest.ps
+gxprint precipitation_Top5years_deviation_ttest.png
+
+c
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+
+color.gs -8 8 4 -kind brown->white->blue
+
+d a2-b
+
+hatch1 ttest.3(t=1) 2 2 -thickness 4 -angle 45 -int 0.05 -type 1 -color 1
+
+xcbar 2.0 9.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 3
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 precipitation(mm/day)_deviation_Bottom5years
+gxprint precipitation_Bottom5years_deviation_ttest.ps
+gxprint precipitation_Bottom5years_deviation_ttest.png

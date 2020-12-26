@@ -1,0 +1,136 @@
+open ../JRA_data/all_year.ctl
+open flux_ttest_Top5years.ctl
+open flux_ttest_Bottom5years.ctl
+
+q file 1
+q file 2
+
+qu2000=sum(qu,t=1,t=212)
+qu2001=sum(qu,t=213,t=452)
+qu2002=sum(qu,t=453,t=620)
+qu2003=sum(qu,t=621,t=832)
+qu2004=sum(qu,t=833,t=1008)
+qu2005=sum(qu,t=1009,t=1160)
+qu2006=sum(qu,t=1161,t=1356)
+qu2007=sum(qu,t=1357,t=1520)
+qu2008=sum(qu,t=1521,t=1680)
+qu2009=sum(qu,t=1681,t=1932)
+qu2010=sum(qu,t=1933,t=2076)
+qu2011=sum(qu,t=2077,t=2272)
+qu2012=sum(qu,t=2273,t=2492)
+qu2013=sum(qu,t=2493,t=2664)
+qu2014=sum(qu,t=2665,t=2860)
+qu2015=sum(qu,t=2861,t=3092)
+qu2016=sum(qu,t=3093,t=3272)
+qu2017=sum(qu,t=3273,t=3368)
+qu2018=sum(qu,t=3369,t=3508)
+qu2019=sum(qu,t=3509,t=3628)
+T5qu=(qu2006+qu2012+qu2009+qu2003+qu2011)/1076
+B5qu=(qu2004+qu2002+qu2017+qu2005+qu2013)/764
+allqu=(qu2000+qu2001+qu2007+qu2008+qu2010+qu2014+qu2015+qu2016+qu2018+qu2019)/1788
+deviT5qu=T5qu-allqu
+deviB5qu=B5qu-allqu
+diffqu=T5qu-B5qu
+
+qv2000=sum(qv,t=1,t=212)
+qv2001=sum(qv,t=213,t=452)
+qv2002=sum(qv,t=453,t=620)
+qv2003=sum(qv,t=621,t=832)
+qv2004=sum(qv,t=833,t=1008)
+qv2005=sum(qv,t=1009,t=1160)
+qv2006=sum(qv,t=1161,t=1356)
+qv2007=sum(qv,t=1357,t=1520)
+qv2008=sum(qv,t=1521,t=1680)
+qv2009=sum(qv,t=1681,t=1932)
+qv2010=sum(qv,t=1933,t=2076)
+qv2011=sum(qv,t=2077,t=2272)
+qv2012=sum(qv,t=2273,t=2492)
+qv2013=sum(qv,t=2493,t=2664)
+qv2014=sum(qv,t=2665,t=2860)
+qv2015=sum(qv,t=2861,t=3092)
+qv2016=sum(qv,t=3093,t=3272)
+qv2017=sum(qv,t=3273,t=3368)
+qv2018=sum(qv,t=3369,t=3508)
+qv2019=sum(qv,t=3509,t=3628)
+T5qv=(qv2006+qv2012+qv2009+qv2003+qv2011)/1076
+B5qv=(qv2004+qv2002+qv2017+qv2005+qv2013)/764
+allqv=(qv2000+qv2001+qv2007+qv2008+qv2010+qv2014+qv2015+qv2016+qv2018+qv2019)/1788
+deviT5qv=T5qv-allqv
+deviB5qv=B5qv-allqv
+diffqv=T5qv-B5qv
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 65 5 -kind white->rainbow
+*color.gs -5 5 1 -kind brown->white->blue
+color.gs -1 1 0.1 -kind blue->white->red
+
+set ccolor 1
+set gxout vector
+set arrlab on
+set arrscl 1 150
+d deviT5qu;deviT5qv
+
+hatch1 ttest.2(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 2
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 2.0 9.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 5 0.75  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 water_vapor_flux(kg/m/s)_deviation_Top5years
+gxprint flux_Top5years_ttest.ps
+gxprint flux_Top5years_ttest.png
+
+c
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 65 5 -kind white->rainbow
+*color.gs -5 5 1 -kind brown->white->blue
+color.gs -1 1 0.1 -kind blue->white->red
+
+set ccolor 1
+set gxout vector
+set arrlab on
+set arrscl 1 150
+d deviB5qu;deviB5qv
+
+hatch1 ttest.3(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 2
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 2.0 9.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 5 0.75  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 water_vapor_flux(kg/m/s)_deviation_Bottom5years
+gxprint flux_Bottom5years_ttest.ps
+gxprint flux_Bottom5years_ttest.png

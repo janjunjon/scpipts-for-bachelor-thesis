@@ -1,0 +1,101 @@
+open ../JRA_data/all_year.ctl
+open PWV_ttest_Top5years.ctl
+open PWV_ttest_Bottom5years.ctl
+
+q file 1
+q file 2
+
+w2000=sum(w,t=1,t=212)
+w2001=sum(w,t=213,t=452)
+w2002=sum(w,t=453,t=620)
+w2003=sum(w,t=621,t=832)
+w2004=sum(w,t=833,t=1008)
+w2005=sum(w,t=1009,t=1160)
+w2006=sum(w,t=1161,t=1356)
+w2007=sum(w,t=1357,t=1520)
+w2008=sum(w,t=1521,t=1680)
+w2009=sum(w,t=1681,t=1932)
+w2010=sum(w,t=1933,t=2076)
+w2011=sum(w,t=2077,t=2272)
+w2012=sum(w,t=2273,t=2492)
+w2013=sum(w,t=2493,t=2664)
+w2014=sum(w,t=2665,t=2860)
+w2015=sum(w,t=2861,t=3092)
+w2016=sum(w,t=3093,t=3272)
+w2017=sum(w,t=3273,t=3368)
+w2018=sum(w,t=3369,t=3508)
+w2019=sum(w,t=3509,t=3628)
+T5w=(w2006+w2012+w2009+w2003+w2011)/1076
+B5w=(w2004+w2002+w2017+w2005+w2013)/764
+allw=(w2000+w2001+w2007+w2008+w2010+w2014+w2015+w2016+w2018+w2019)/1788
+deviT5w=T5w-allw
+deviB5w=B5w-allw
+diffw=T5w-B5w
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 65 5 -kind white->rainbow
+*color.gs -5 5 1 -kind brown->white->blue
+color.gs -2.0 2.0 1.0 -kind brown->white->blue
+
+d deviT5w
+
+hatch1 ttest.2(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 1
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 PWV(mm)_deviation_Top5years
+gxprint PWV_Top5years_ttest.ps
+gxprint PWV_Top5years_ttest.png
+
+c
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 65 5 -kind white->rainbow
+*color.gs -5 5 1 -kind brown->white->blue
+color.gs -2.0 2.0 1.0 -kind brown->white->blue
+
+d deviB5w
+
+hatch1 ttest.3(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 1
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 PWV(mm)_deviation_Bottom5years
+gxprint PWV_Bottom5years_ttest.ps
+gxprint PWV_Bottom5years_ttest.png

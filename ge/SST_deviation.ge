@@ -1,0 +1,104 @@
+sdfopen sst.wkmean.1990-present.nc
+sdfopen lsmask.nc
+open sst_ttest_Top5years.ctl
+open sst_ttest_Bottom5years.ctl
+
+q ctlinfo 1
+q ctlinfo 2
+q ctlinfo 3
+q ctlinfo 4
+query file 1
+query file 2
+query file 3
+query file 4
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 6
+set ylopts 1 1 0.08
+set xlopts 1 1 0.08
+
+set gxout shaded
+*color.gs 0 30 2 -kind rainbow
+color.gs -1 1 0.5 -kind blue->white->red
+
+sstave2000=sum(sst,t=543,t=550)
+sstave2001=sum(sst,t=594,t=603)
+sstave2002=sum(sst,t=649,t=655)
+sstave2003=sum(sst,t=701,t=709)
+sstave2004=sum(sst,t=752,t=758)
+sstave2005=sum(sst,t=806,t=811)
+sstave2006=sum(sst,t=858,t=865)
+sstave2007=sum(sst,t=911,t=916)
+sstave2008=sum(sst,t=961,t=966)
+sstave2009=sum(sst,t=1014,t=1022)
+sstave2010=sum(sst,t=1067,t=1072)
+sstave2011=sum(sst,t=1116,t=1123)
+sstave2012=sum(sst,t=1170,t=1177)
+sstave2013=sum(sst,t=1221,t=1227)
+sstave2014=sum(sst,t=1274,t=1281)
+sstave2015=sum(sst,t=1326,t=1335)
+sstave2016=sum(sst,t=1379,t=1385)
+sstave2017=sum(sst,t=1433,t=1437)
+sstave2018=sum(sst,t=1483,t=1488)
+sstave2019=sum(sst,t=1539,t=1543)
+
+allsstave=(sstave2000+sstave2001+sstave2007+sstave2008+sstave2010+sstave2014+sstave2015+sstave2016+sstave2018+sstave2019)/72
+top5sst=(sstave2006+sstave2012+sstave2009+sstave2003+sstave2011)/43
+bottom5sst=(sstave2004+sstave2002+sstave2017+sstave2005+sstave2013)/32
+
+deviationTop5=top5sst-allsstave
+deviationB5=bottom5sst-allsstave
+
+d deviationTop5
+
+*d ttest.3(t=1)
+
+hatch1 ttest.3(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 1
+
+basemap.gs L 15 1 L
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 SST_deviation_Top5years(Celsius)
+
+gxprint SST_deviation_Top5years_ttest.ps
+gxprint SST_deviation_Top5years_ttest.png
+
+c
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+*color.gs 0 30 2 -kind rainbow
+color.gs -1 1 0.5 -kind blue->white->red
+
+d deviationB5
+
+hatch1 ttest.4(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 1
+
+basemap.gs L 15 1 L
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 SST_deviation_Bottom5years(Celsius)
+
+gxprint SST_deviation_Bottom5years_ttest.ps
+gxprint SST_deviation_Bottom5years_ttest.png

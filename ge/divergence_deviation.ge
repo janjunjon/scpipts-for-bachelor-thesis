@@ -1,0 +1,101 @@
+open ../JRA_data/all_year.ctl
+open divergence_ttest_Top5years.ctl
+open divergence_ttest_Bottom5years.ctl
+
+q file 1
+q file 2
+
+a2000=sum(a,t=1,t=212)
+a2001=sum(a,t=213,t=452)
+a2002=sum(a,t=453,t=620)
+a2003=sum(a,t=621,t=832)
+a2004=sum(a,t=833,t=1008)
+a2005=sum(a,t=1009,t=1160)
+a2006=sum(a,t=1161,t=1356)
+a2007=sum(a,t=1357,t=1520)
+a2008=sum(a,t=1521,t=1680)
+a2009=sum(a,t=1681,t=1932)
+a2010=sum(a,t=1933,t=2076)
+a2011=sum(a,t=2077,t=2272)
+a2012=sum(a,t=2273,t=2492)
+a2013=sum(a,t=2493,t=2664)
+a2014=sum(a,t=2665,t=2860)
+a2015=sum(a,t=2861,t=3092)
+a2016=sum(a,t=3093,t=3272)
+a2017=sum(a,t=3273,t=3368)
+a2018=sum(a,t=3369,t=3508)
+a2019=sum(a,t=3509,t=3628)
+T5a=(a2006+a2012+a2009+a2003+a2011)/1076
+B5a=(a2004+a2002+a2017+a2005+a2013)/764
+alla=(a2000+a2001+a2007+a2008+a2010+a2014+a2015+a2016+a2018+a2019)/1788
+deviT5a=T5a-alla
+deviB5a=B5a-alla
+diffa=T5a-B5a
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 65 5 -kind white->rainbow
+*color.gs -5 5 1 -kind brown->white->blue
+color.gs -1 1 0.5 -kind blue->white->red
+
+d deviT5a
+
+hatch1 ttest.2(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 1
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -fh 0.15 -ft 4 -fw 0.1 -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 water_vapor_flux_divergence(mm/dy)_deviation_Top5years
+gxprint divergence_Top5years_ttest.ps
+gxprint divergence_Top5years_ttest.png
+
+c
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 65 5 -kind white->rainbow
+*color.gs -5 5 1 -kind brown->white->blue
+color.gs -1 1 0.5 -kind blue->white->red
+
+d deviB5a
+
+hatch1 ttest.3(t=1) 2 3 -thickness 4 -angle 45 -int 0.07 -type 1 -color 1
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -fh 0.15 -ft 4 -fw 0.07 -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 water_vapor_flux_divergence(mm/dy)_deviation_Bottom5years
+gxprint divergence_Bottom5years_ttest.ps
+gxprint divergence_Bottom5years_ttest.png

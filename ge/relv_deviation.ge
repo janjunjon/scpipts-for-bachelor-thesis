@@ -1,0 +1,112 @@
+open ../JRA_data/relv.ctl
+open ../JRA_data/pres.ctl
+open relv_ttest_Top5years.ctl
+open relv_ttest_Bottom5years.ctl
+
+q file 1
+q file 2
+
+set lev 700
+
+relv2000=sum(relv,t=1,t=212)
+relv2001=sum(relv,t=213,t=452)
+relv2002=sum(relv,t=453,t=620)
+relv2003=sum(relv,t=621,t=832)
+relv2004=sum(relv,t=833,t=1008)
+relv2005=sum(relv,t=1009,t=1160)
+relv2006=sum(relv,t=1161,t=1356)
+relv2007=sum(relv,t=1357,t=1520)
+relv2008=sum(relv,t=1521,t=1680)
+relv2009=sum(relv,t=1681,t=1932)
+relv2010=sum(relv,t=1933,t=2076)
+relv2011=sum(relv,t=2077,t=2272)
+relv2012=sum(relv,t=2273,t=2492)
+relv2013=sum(relv,t=2493,t=2664)
+relv2014=sum(relv,t=2665,t=2860)
+relv2015=sum(relv,t=2861,t=3092)
+relv2016=sum(relv,t=3093,t=3272)
+relv2017=sum(relv,t=3273,t=3368)
+relv2018=sum(relv,t=3369,t=3508)
+relv2019=sum(relv,t=3509,t=3628)
+T5relv=(relv2006+relv2012+relv2009+relv2003+relv2011)/1076
+B5relv=(relv2004+relv2002+relv2017+relv2005+relv2013)/764
+allrelv=(relv2000+relv2001+relv2007+relv2008+relv2010+relv2014+relv2015+relv2016+relv2018+relv2019)/1788
+deviT5relv=T5relv-allrelv
+deviB5relv=B5relv-allrelv
+diffrelv=T5relv-B5relv
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+y=const(maskout(diffrelv,700-pres.2/100),0)
+set ccolor 1
+d y
+
+*color.gs -0.000005 0.000005 0.0000005 -kind blue->white->red
+color.gs -5 5 2.5 -kind blue->white->red
+x=maskout(deviT5relv,pres.2/100-700)
+
+d x*1000000
+
+hatch1 ttest.3(t=1) 2 3 -thickness 4 -angle 45 -int 0.08 -type 1 -color 1
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -fh 0.15 -ft 4 -fw 0.1 -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 relative_vorticity(/10^6/s)_700hPa_deviation_Top5years
+gxprint relv_Top5years_ttest.ps
+gxprint relv_Top5years_ttest.png
+
+c
+
+set background 1
+set lat 15 50
+set lon 80 150
+set grads off
+set map 1 1 8
+set gxout shaded
+
+y=const(maskout(deviB5relv,700-pres.2/100),0)
+set ccolor 1
+d y
+
+*color.gs -0.000005 0.000005 0.0000005 -kind blue->white->red
+color.gs -5 5 2.5 -kind blue->white->red
+x=maskout(deviB5relv,pres.2/100-700)
+
+d x*1000000
+
+hatch1 ttest.4(t=1) 2 3 -thickness 4 -angle 45 -int 0.08 -type 1 -color 1
+set gxout contour
+set ccolor 2
+set cint 2
+set cstyle 4
+set clab off
+*d ttest.2(t=1)
+
+xcbar 1.0 10.0 0.5 0.7 -edge triangle -fh 0.15 -ft 4 -fw 0.1 -line on
+
+set strsiz 0.1 0.15
+set string 1 c 2
+draw string 8 0.9  hatchings : statistical significance at the 95% confidence levels
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.75 relative_vorticity(/10^6/s)_700hPa_deviation_Bottom5years
+gxprint relv_Bottom5years_ttest.ps
+gxprint relv_Bottom5years_ttest.png

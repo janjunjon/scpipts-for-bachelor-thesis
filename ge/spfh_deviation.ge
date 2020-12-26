@@ -1,0 +1,142 @@
+open JRA_data/spfh.ctl
+
+q file 1
+
+*set t 1 
+set z 1 20
+*set z 1 27
+*set lat 31.5
+set lat 32
+set lon 120 132.5
+set grads off
+set parea 1 9 1 7
+set background 1
+
+spfh2000=sum(spfh,t=1,t=212)
+spfh2001=sum(spfh,t=213,t=452)
+spfh2002=sum(spfh,t=453,t=620)
+spfh2003=sum(spfh,t=621,t=832)
+spfh2004=sum(spfh,t=833,t=1008)
+spfh2005=sum(spfh,t=1009,t=1160)
+spfh2006=sum(spfh,t=1161,t=1356)
+spfh2007=sum(spfh,t=1357,t=1520)
+spfh2008=sum(spfh,t=1521,t=1680)
+spfh2009=sum(spfh,t=1681,t=1932)
+spfh2010=sum(spfh,t=1933,t=2076)
+spfh2011=sum(spfh,t=2077,t=2272)
+spfh2012=sum(spfh,t=2273,t=2492)
+spfh2013=sum(spfh,t=2493,t=2664)
+spfh2014=sum(spfh,t=2665,t=2860)
+spfh2015=sum(spfh,t=2861,t=3092)
+spfh2016=sum(spfh,t=3093,t=3272)
+spfh2017=sum(spfh,t=3273,t=3368)
+spfh2018=sum(spfh,t=3369,t=3508)
+spfh2019=sum(spfh,t=3509,t=3628)
+T5spfh=(spfh2006+spfh2012+spfh2009+spfh2003+spfh2011)/1076
+B5spfh=(spfh2004+spfh2002+spfh2017+spfh2005+spfh2013)/764
+allspfh=(spfh2000+spfh2001+spfh2002+spfh2003+spfh2004+spfh2005+spfh2006+spfh2007+spfh2008+spfh2009+spfh2010+spfh2011+spfh2012+spfh2013+spfh2014+spfh2015+spfh2016+spfh2017+spfh2018+spfh2019)/3628
+deviT5spfh=T5spfh-allspfh
+deviB5spfh=B5spfh-allspfh
+
+set background 1
+set grads off
+set map 1 1 8
+set gxout shaded
+
+color.gs 0 16 2 -kind white->rainbow
+*color.gs 0 30 5 -kind white->rainbow
+*color.gs -50 50 10 -kind brown->white->blue
+
+d T5spfh*1000
+
+xcbar 9.5 9.75 1 7 -edge triangle -line on
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.5 Height_Section_of_specific_humidity(g/kg)_average_Top5years
+gxprint Height_Section_specific_humidity_average_Top5years.ps
+gxprint Height_Section_specific_humidity_average_Top5years.png
+
+c
+
+set background 1
+set grads off
+set map 1 1 8
+set gxout shaded
+
+color.gs 0 16 2 -kind white->rainbow
+*color.gs 0 30 5 -kind white->rainbow
+*color.gs -50 50 10 -kind brown->white->blue
+
+d B5spfh*1000
+
+xcbar 9.5 9.75 1 7 -edge triangle -line on
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.5 Height_Section_of_specific_humidity(g/kg)_average_Bottom5years
+gxprint Height_Section_specific_humidity_average_Bottom5years.ps
+gxprint Height_Section_specific_humidity_average_Bottom5years.png
+
+c
+
+set background 1
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 70 5 -kind white->rainbow
+color.gs -0.5 0.5 0.1 -kind brown->white->blue
+*color.gs -50 50 10 -kind brown->white->blue
+
+d (T5spfh-B5spfh)*1000
+
+xcbar 9.5 9.75 1 7 -edge triangle -line on
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.5 Height_Section_of_specific_humidity(g/kg)_deviation
+gxprint Height_Section_specific_humidity_deviation.ps
+gxprint Height_Section_specific_humidity_deviation.png
+
+c
+
+set background 1
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 70 5 -kind white->rainbow
+color.gs -0.5 0.5 0.1 -kind brown->white->blue
+*color.gs -50 50 10 -kind brown->white->blue
+
+d (T5spfh-allspfh)*1000
+
+xcbar 9.5 9.75 1 7 -edge triangle -line on
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.5 Height_Section_of_specific_humidity(g/kg)_deviation_Top5years
+gxprint Height_Section_specific_humidity_deviation_Top5years.ps
+gxprint Height_Section_specific_humidity_deviation_Top5years.png
+
+c
+
+set background 1
+set grads off
+set map 1 1 8
+set gxout shaded
+
+*color.gs 0 70 5 -kind white->rainbow
+color.gs -0.5 0.5 0.1 -kind brown->white->blue
+*color.gs -50 50 10 -kind brown->white->blue
+
+d (B5spfh-allspfh)*1000
+
+xcbar 9.5 9.75 1 7 -edge triangle -line on
+
+set strsiz 0.15 0.25
+set string 1 c 6
+draw string 5.5 7.5 Height_Section_of_specific_humidity(g/kg)_deviation_Bottom5years
+gxprint Height_Section_specific_humidity_deviation_Bottom5years.ps
+gxprint Height_Section_specific_humidity_deviation_Bottom5years.png
